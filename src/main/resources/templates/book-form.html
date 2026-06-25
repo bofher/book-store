@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="uk" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{books.form.title}">Book form</title>
+    <th:block th:replace="~{components/ui :: styles}"></th:block>
+</head>
+<body>
+<div class="app-shell">
+    <th:block th:if="${editMode}">
+        <th:block th:with="currentPath=@{/books/{name}/edit(name=${name})}">
+            <th:block th:replace="~{components/ui :: topbar(${currentPath})}"></th:block>
+        </th:block>
+    </th:block>
+    <th:block th:unless="${editMode}">
+        <th:block th:with="currentPath='/books/add'">
+            <th:block th:replace="~{components/ui :: topbar(${currentPath})}"></th:block>
+        </th:block>
+    </th:block>
+    <main class="page">
+        <section class="panel">
+            <h1 th:if="${editMode}" th:text="#{books.form.title.edit}">Edit book</h1>
+            <h1 th:unless="${editMode}" th:text="#{books.form.title.add}">Add book</h1>
+
+            <form class="form form--wide"
+                  th:if="${editMode}"
+                  th:action="@{/books/{name}/edit(name=${name})}"
+                  th:object="${bookForm}"
+                  method="post">
+                <div class="field">
+                    <label for="name" th:text="#{books.field.title}">Title</label>
+                    <input id="name" type="text" th:field="*{name}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                </div>
+                <div class="field">
+                    <label for="genre" th:text="#{books.genre}">Genre</label>
+                    <input id="genre" type="text" th:field="*{genre}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></p>
+                </div>
+                <div class="field">
+                    <label for="ageGroup" th:text="#{books.age_group}">Age group</label>
+                    <select id="ageGroup" th:field="*{ageGroup}" required>
+                        <option value="" disabled>--</option>
+                        <option th:each="ageGroup : ${ageGroups}" th:value="${ageGroup}"
+                                th:text="${#messages.msg('books.age_group.' + ageGroup)}"></option>
+                    </select>
+                    <p class="field-error" th:if="${#fields.hasErrors('ageGroup')}" th:errors="*{ageGroup}"></p>
+                </div>
+                <div class="field">
+                    <label for="price" th:text="#{books.price}">Price</label>
+                    <input id="price" type="number" step="0.01" min="0" th:field="*{price}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+                </div>
+                <div class="field">
+                    <label for="publicationDate" th:text="#{books.publication_date}">Publication date</label>
+                    <input id="publicationDate" type="date" th:field="*{publicationDate}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('publicationDate')}" th:errors="*{publicationDate}"></p>
+                </div>
+                <div class="field">
+                    <label for="author" th:text="#{books.author}">Author</label>
+                    <input id="author" type="text" th:field="*{author}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></p>
+                </div>
+                <div class="field">
+                    <label for="pages" th:text="#{books.pages}">Pages</label>
+                    <input id="pages" type="number" min="1" th:field="*{pages}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('pages')}" th:errors="*{pages}"></p>
+                </div>
+                <div class="field">
+                    <label for="language" th:text="#{books.language}">Language</label>
+                    <select id="language" th:field="*{language}" required>
+                        <option value="" disabled>--</option>
+                        <option th:each="language : ${languages}" th:value="${language}"
+                                th:text="${#messages.msg('books.language.' + language)}"></option>
+                    </select>
+                    <p class="field-error" th:if="${#fields.hasErrors('language')}" th:errors="*{language}"></p>
+                </div>
+                <div class="field">
+                    <label for="characteristics" th:text="#{books.characteristics}">Characteristics</label>
+                    <textarea id="characteristics" rows="4" th:field="*{characteristics}" required></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('characteristics')}" th:errors="*{characteristics}"></p>
+                </div>
+                <div class="field">
+                    <label for="description" th:text="#{books.description}">Description</label>
+                    <textarea id="description" rows="5" th:field="*{description}" required></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+                </div>
+                <div class="actions">
+                    <button class="primary-button" type="submit" th:text="#{books.save}">Save changes</button>
+                    <a class="ghost-link" th:href="@{/books/{name}(name=${name})}" th:text="#{books.back}">Back</a>
+                </div>
+            </form>
+
+            <form class="form form--wide"
+                  th:unless="${editMode}"
+                  th:action="@{/books/add}"
+                  th:object="${bookForm}"
+                  method="post">
+                <div class="field">
+                    <label for="name" th:text="#{books.field.title}">Title</label>
+                    <input id="name" type="text" th:field="*{name}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                </div>
+                <div class="field">
+                    <label for="genre" th:text="#{books.genre}">Genre</label>
+                    <input id="genre" type="text" th:field="*{genre}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></p>
+                </div>
+                <div class="field">
+                    <label for="ageGroup" th:text="#{books.age_group}">Age group</label>
+                    <select id="ageGroup" th:field="*{ageGroup}" required>
+                        <option value="" disabled>--</option>
+                        <option th:each="ageGroup : ${ageGroups}" th:value="${ageGroup}"
+                                th:text="${#messages.msg('books.age_group.' + ageGroup)}"></option>
+                    </select>
+                    <p class="field-error" th:if="${#fields.hasErrors('ageGroup')}" th:errors="*{ageGroup}"></p>
+                </div>
+                <div class="field">
+                    <label for="price" th:text="#{books.price}">Price</label>
+                    <input id="price" type="number" step="0.01" min="0" th:field="*{price}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+                </div>
+                <div class="field">
+                    <label for="publicationDate" th:text="#{books.publication_date}">Publication date</label>
+                    <input id="publicationDate" type="date" th:field="*{publicationDate}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('publicationDate')}" th:errors="*{publicationDate}"></p>
+                </div>
+                <div class="field">
+                    <label for="author" th:text="#{books.author}">Author</label>
+                    <input id="author" type="text" th:field="*{author}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></p>
+                </div>
+                <div class="field">
+                    <label for="pages" th:text="#{books.pages}">Pages</label>
+                    <input id="pages" type="number" min="1" th:field="*{pages}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('pages')}" th:errors="*{pages}"></p>
+                </div>
+                <div class="field">
+                    <label for="language" th:text="#{books.language}">Language</label>
+                    <select id="language" th:field="*{language}" required>
+                        <option value="" disabled>--</option>
+                        <option th:each="language : ${languages}" th:value="${language}"
+                                th:text="${#messages.msg('books.language.' + language)}"></option>
+                    </select>
+                    <p class="field-error" th:if="${#fields.hasErrors('language')}" th:errors="*{language}"></p>
+                </div>
+                <div class="field">
+                    <label for="characteristics" th:text="#{books.characteristics}">Characteristics</label>
+                    <textarea id="characteristics" rows="4" th:field="*{characteristics}" required></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('characteristics')}" th:errors="*{characteristics}"></p>
+                </div>
+                <div class="field">
+                    <label for="description" th:text="#{books.description}">Description</label>
+                    <textarea id="description" rows="5" th:field="*{description}" required></textarea>
+                    <p class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+                </div>
+                <div class="actions">
+                    <button class="primary-button" type="submit" th:text="#{books.add}">Add book</button>
+                    <a class="ghost-link" th:href="@{/books}" th:text="#{books.back}">Back</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="uk" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{login.page.title}">Login</title>
+    <th:block th:replace="~{components/ui :: styles}"></th:block>
+</head>
+<body>
+<div class="app-shell">
+    <th:block th:replace="~{components/ui :: topbar('/auth/login')}"></th:block>
+    <main class="page">
+        <section class="panel">
+            <h1 th:text="#{login.title}">Sign in</h1>
+            <form class="form" th:action="@{/auth/login}" th:object="${loginRequest}" method="post">
+                <div class="form-error" th:if="${#fields.hasGlobalErrors()}">
+                    <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+                </div>
+                <div class="field">
+                    <label for="email" th:text="#{login.email}">Email</label>
+                    <input id="email" type="email" th:field="*{email}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                </div>
+                <div class="field">
+                    <label for="password" th:text="#{login.password}">Password</label>
+                    <input id="password" type="password" th:field="*{password}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                </div>
+                <div class="actions">
+                    <button class="primary-button" type="submit" th:text="#{login.submit}">Sign in</button>
+                    <a class="ghost-link" th:href="@{/auth/register}" th:text="#{login.create_account}">Create account</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="uk" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{client.orders.page.title}">My orders</title>
+    <th:block th:replace="~{components/ui :: styles}"></th:block>
+</head>
+<body>
+<div class="app-shell">
+    <th:block th:replace="~{components/ui :: topbar('/client/orders')}"></th:block>
+    <main class="page">
+        <section class="panel">
+            <h1 th:text="#{client.orders.title}">My orders</h1>
+
+            <div th:if="${orderCanceled}" class="subtle" th:text="#{client.orders.canceled}">Order canceled</div>
+            <div th:if="${orderDeleted}" class="subtle" th:text="#{client.orders.deleted}">Order deleted</div>
+
+            <div th:if="${#lists.isEmpty(orders)}" class="form-error" th:text="#{client.orders.empty}">No orders</div>
+
+            <div th:if="${!#lists.isEmpty(orders)}" class="orders-list">
+                <article th:each="order : ${orders}" class="order-card">
+                    <div class="order-card__header">
+                        <div class="order-card__title">
+                            <span class="subtle" th:text="${#temporals.format(order.orderDate, 'dd.MM.yyyy HH:mm')}">01.01.2026 12:00</span>
+                        </div>
+                        <span class="badge"
+                              th:classappend="${order.status == 'PENDING'} ? ' badge--pending' : (${order.status == 'CONFIRMED'} ? ' badge--confirmed' : ' badge--canceled')"
+                              th:text="${#messages.msg('order.status.' + order.status)}">Pending</span>
+                    </div>
+
+                    <div class="order-card__meta">
+                        <div class="meta-item">
+                            <span class="meta-label" th:text="#{orders.column.price}">Price</span>
+                            <span class="meta-value" th:text="${order.price}">0.00</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label" th:text="#{orders.column.status}">Status</span>
+                            <span class="meta-value" th:text="${#messages.msg('order.status.' + order.status)}">Pending</span>
+                        </div>
+                    </div>
+
+                    <div class="order-items">
+                        <div class="meta-label" th:text="#{orders.column.items}">Items</div>
+                        <div th:each="item : ${order.bookItems}" class="order-item">
+                            <span th:text="${item.bookName}">Book name</span>
+                            <span th:text="${'x ' + item.quantity}">x1</span>
+                        </div>
+                    </div>
+
+                    <div class="order-actions">
+                        <form th:if="${order.status == 'PENDING'}" th:action="@{/client/orders/cancel}" method="post">
+                            <input type="hidden" name="orderDate" th:value="${#temporals.format(order.orderDate, 'yyyy-MM-dd''T''HH:mm:ss.SSSSSSSSS')}">
+                            <button class="primary-button" type="submit" th:text="#{order.cancel}">Cancel</button>
+                        </form>
+                        <form th:if="${order.status != 'PENDING'}" th:action="@{/client/orders/delete}" method="post"
+                              th:attr="data-confirm=#{order.delete.confirm}, onsubmit=|return confirm(this.dataset.confirm);|">
+                            <input type="hidden" name="orderDate" th:value="${#temporals.format(order.orderDate, 'yyyy-MM-dd''T''HH:mm:ss.SSSSSSSSS')}">
+                            <button class="primary-button" type="submit" style="background:#b91c1c;" th:text="#{order.delete}">Delete</button>
+                        </form>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

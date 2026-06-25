@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="uk" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{employee.orders.page.title}">Orders management</title>
+    <th:block th:replace="~{components/ui :: styles}"></th:block>
+</head>
+<body>
+<div class="app-shell">
+    <th:block th:replace="~{components/ui :: topbar('/employee/orders')}"></th:block>
+    <main class="page">
+        <section class="panel">
+            <h1 th:text="#{employee.orders.title}">Orders management</h1>
+            <div th:if="${orderDeleted}" class="subtle" th:text="#{employee.orders.deleted}">Order deleted</div>
+
+            <form class="orders-toolbar" th:action="@{/employee/orders}" method="get">
+                <input type="text" name="search" th:value="${search}" th:placeholder="#{employee.orders.search_placeholder}" style="flex: 1; min-width: 220px;">
+                <button class="primary-button" type="submit" th:text="#{books.submit}">Search</button>
+                <a class="ghost-link" th:href="@{/employee/orders}" th:text="#{employee.orders.reset}">Reset</a>
+            </form>
+
+            <div th:if="${orders.totalElements == 0}" class="form-error" th:text="#{employee.orders.no_orders}">No orders</div>
+
+            <div th:if="${orders.totalElements > 0}" class="orders-list">
+                <article th:each="order : ${orders.content}" class="order-card">
+                    <div class="order-card__header">
+                        <div class="order-card__title">
+                            <a th:href="@{/employee/orders(search=${order.clientEmail})}" th:text="${order.clientEmail}">client</a>
+                            <span class="subtle" th:text="${#temporals.format(order.orderDate, 'dd.MM.yyyy HH:mm')}">01.01.2026 12:00</span>
+                        </div>
+                        <span class="badge"
+                              th:classappend="${order.status == 'PENDING'} ? ' badge--pending' : (${order.status == 'CONFIRMED'} ? ' badge--confirmed' : ' badge--canceled')"
+                              th:text="${#messages.msg('order.status.' + order.status)}">Pending</span>
+                    </div>
+
+                    <div class="order-card__meta">
+                        <div class="meta-item">
+                            <span class="meta-label" th:text="#{orders.column.client}">Client</span>
+                            <span class="meta-value" th:text="${order.clientEmail}">client</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label" th:text="#{orders.column.price}">Price</span>
+                            <span class="meta-value" th:text="${order.price}">0.00</span>
+                        </div>
+                    </div>
+
+                    <div class="order-items">
+                        <div class="meta-label" th:text="#{orders.column.items}">Items</div>
+                        <div th:each="item : ${order.bookItems}" class="order-item">
+                            <span th:text="${item.bookName}">Book name</span>
+                            <span th:text="${'x ' + item.quantity}">x1</span>
+                        </div>
+                    </div>
+
+                    <div class="order-actions">
+                        <form th:if="${order.status == 'PENDING'}"
+                              th:action="@{/employee/orders/confirm}"
+                              method="post">
+                            <input type="hidden" name="clientEmail" th:value="${order.clientEmail}">
+                            <input type="hidden" name="orderDate" th:value="${#temporals.format(order.orderDate, 'yyyy-MM-dd''T''HH:mm:ss.SSSSSSSSS')}">
+                            <button class="primary-button" type="submit" th:text="#{employee.orders.confirm}">Confirm</button>
+                        </form>
+                        <form th:if="${order.status == 'PENDING'}"
+                              th:action="@{/employee/orders/cancel}"
+                              method="post">
+                            <input type="hidden" name="clientEmail" th:value="${order.clientEmail}">
+                            <input type="hidden" name="orderDate" th:value="${#temporals.format(order.orderDate, 'yyyy-MM-dd''T''HH:mm:ss.SSSSSSSSS')}">
+                            <button class="primary-button" type="submit" style="background:#b91c1c;" th:text="#{order.cancel}">Cancel</button>
+                        </form>
+                        <form th:action="@{/employee/orders/delete}" method="post"
+                              th:attr="data-confirm=#{order.delete.confirm}, onsubmit=|return confirm(this.dataset.confirm);|">
+                            <input type="hidden" name="clientEmail" th:value="${order.clientEmail}">
+                            <input type="hidden" name="orderDate" th:value="${#temporals.format(order.orderDate, 'yyyy-MM-dd''T''HH:mm:ss.SSSSSSSSS')}">
+                            <button class="primary-button" type="submit" style="background:#b91c1c;" th:text="#{order.delete}">Delete</button>
+                        </form>
+                    </div>
+                </article>
+            </div>
+
+            <div class="pagination-row">
+                <div class="subtle" th:text="${orders.totalElements + ' ' + #messages.msg('employee.orders.total')}">0 orders</div>
+                <div class="actions">
+                    <a class="ghost-link"
+                       th:if="${orders.hasPrevious()}"
+                       th:href="@{/employee/orders(page=${orders.number - 1}, size=${orders.size}, search=${search})}"
+                       th:text="#{books.previous}">Prev</a>
+                    <a class="ghost-link"
+                       th:if="${orders.hasNext()}"
+                       th:href="@{/employee/orders(page=${orders.number + 1}, size=${orders.size}, search=${search})}"
+                       th:text="#{books.next}">Next</a>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

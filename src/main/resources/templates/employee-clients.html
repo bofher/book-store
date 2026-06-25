@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="uk" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{employee.clients.page.title}">Clients</title>
+    <th:block th:replace="~{components/ui :: styles}"></th:block>
+</head>
+<body>
+<div class="app-shell">
+    <th:block th:replace="~{components/ui :: topbar('/employee/clients')}"></th:block>
+    <main class="page">
+        <section class="panel">
+            <h1 th:text="#{employee.clients.title}">Clients</h1>
+
+            <div th:if="${clients.totalElements == 0}" class="form-error" th:text="#{employee.clients.empty}">No clients</div>
+
+            <div th:if="${clients.totalElements > 0}" style="overflow-x:auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                    <tr style="text-align:left; border-bottom:1px solid var(--border);">
+                        <th style="padding:12px;" th:text="#{profile.email}">Email</th>
+                        <th style="padding:12px;" th:text="#{profile.name}">Name</th>
+                        <th style="padding:12px;" th:text="#{profile.balance}">Balance</th>
+                        <th style="padding:12px;" th:text="#{employee.clients.status}">Status</th>
+                        <th style="padding:12px;" th:text="#{orders.column.actions}">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="client : ${clients.content}" style="border-bottom:1px solid var(--border);">
+                        <td style="padding:12px;">
+                            <a th:href="@{/employee/orders(search=${client.email})}" th:text="${client.email}">email</a>
+                        </td>
+                        <td style="padding:12px;" th:text="${client.name}">name</td>
+                        <td style="padding:12px;" th:text="${client.balance}">0.00</td>
+                        <td style="padding:12px;">
+                            <span th:switch="${client.blocked}">
+                                <span class="badge badge--canceled" th:case="true" th:text="#{employee.clients.blocked_state}">Blocked</span>
+                                <span class="badge badge--confirmed" th:case="false" th:text="#{employee.clients.active_state}">Active</span>
+                            </span>
+                        </td>
+                        <td style="padding:12px;">
+                            <div class="order-actions">
+                                <form th:if="${!client.blocked}"
+                                      th:action="@{|/employee/clients/${client.email}/block|}"
+                                      method="post">
+                                    <button class="primary-button" type="submit" style="background:#b91c1c;" th:text="#{employee.clients.block}">Block</button>
+                                </form>
+                                <form th:if="${client.blocked}"
+                                      th:action="@{|/employee/clients/${client.email}/unblock|}"
+                                      method="post">
+                                    <button class="primary-button" type="submit" th:text="#{employee.clients.unblock}">Unblock</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="actions" style="justify-content: space-between; margin-top: 20px;">
+                <div class="subtle" th:text="${clients.totalElements + ' ' + #messages.msg('employee.clients.total')}">0 clients</div>
+                <div class="actions">
+                    <a class="ghost-link"
+                       th:if="${clients.hasPrevious()}"
+                       th:href="@{/employee/clients(page=${clients.number - 1}, size=${clients.size})}"
+                       th:text="#{books.previous}">Prev</a>
+                    <a class="ghost-link"
+                       th:if="${clients.hasNext()}"
+                       th:href="@{/employee/clients(page=${clients.number + 1}, size=${clients.size})}"
+                       th:text="#{books.next}">Next</a>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

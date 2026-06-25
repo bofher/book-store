@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="uk" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{books.page.title}">Books</title>
+    <th:block th:replace="~{components/ui :: styles}"></th:block>
+</head>
+<body>
+<div class="app-shell">
+    <th:block th:replace="~{components/ui :: topbar('/books')}"></th:block>
+    <main class="page">
+        <section class="panel">
+            <h1 th:text="#{books.title}">Books</h1>
+            <div class="actions" sec:authorize="hasRole('EMPLOYEE')" style="margin-bottom: 16px;">
+                <a class="primary-button" th:href="@{/books/add(returnTo=${currentBooksUrl},lang=${#locale.language})}" th:text="#{books.add_new}">Add book</a>
+            </div>
+
+            <form class="books-toolbar" th:action="@{/books}" method="get">
+                <input type="hidden" name="lang" th:value="${#locale.language}">
+                <input type="hidden" name="page" value="0">
+                <div class="books-toolbar__field">
+                    <span class="subtle" style="margin: 0;" th:text="#{books.search}">Search</span>
+                    <input type="search" name="search" th:value="${search}" th:placeholder="#{books.search_placeholder}">
+                </div>
+                <div class="books-toolbar__field">
+                    <span class="subtle" style="margin: 0;" th:text="#{books.sort}">Sort by</span>
+                    <select name="sort">
+                        <option value="name,asc" th:selected="${currentSort == 'name,asc'}" th:text="#{books.sort.name_asc}">Title A-Z</option>
+                        <option value="price,asc" th:selected="${currentSort == 'price,asc'}" th:text="#{books.sort.price_asc}">Price low to high</option>
+                        <option value="price,desc" th:selected="${currentSort == 'price,desc'}" th:text="#{books.sort.price_desc}">Price high to low</option>
+                    </select>
+                </div>
+                <div class="books-toolbar__field">
+                    <span class="subtle" style="margin: 0;" th:text="#{books.page_size}">Items per page</span>
+                    <select name="size">
+                        <option th:each="pageSize : ${pageSizes}" th:value="${pageSize}" th:text="${pageSize}"
+                                th:selected="${pageSize == books.size}"></option>
+                    </select>
+                </div>
+                <button class="primary-button" type="submit" th:text="#{books.submit}">Search</button>
+            </form>
+
+            <div class="subtle" th:text="#{books.results}">Results</div>
+
+            <div th:if="${books.totalElements == 0}" class="form-error" th:text="#{books.empty}">No books found</div>
+
+            <div th:if="${books.totalElements > 0}" style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                    <tr style="text-align: left; border-bottom: 1px solid var(--border);">
+                        <th style="padding: 12px;" th:text="#{books.column.title}">Title</th>
+                        <th style="padding: 12px;" th:text="#{books.column.author}">Author</th>
+                        <th style="padding: 12px;" th:text="#{books.column.genre}">Genre</th>
+                        <th style="padding: 12px;" th:text="#{books.column.language}">Language</th>
+                        <th style="padding: 12px;" th:text="#{books.column.price}">Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="book : ${books.content}" style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 12px;">
+                            <a th:href="@{/books/{name}(name=${book.name},returnTo=${currentBooksUrl},lang=${#locale.language})}" th:text="${book.name}">Book name</a>
+                        </td>
+                        <td style="padding: 12px;" th:text="${book.author}">Author</td>
+                        <td style="padding: 12px;" th:text="${book.genre}">Genre</td>
+                        <td style="padding: 12px;" th:text="${#messages.msg('books.language.' + book.language)}">Language</td>
+                        <td style="padding: 12px;" th:text="${book.price}">0.00</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="actions" style="justify-content: space-between; margin-top: 18px;" th:if="${books.totalPages > 1}">
+                <a class="ghost-link"
+                   th:if="${books.number > 0}"
+                   th:href="@{|/books?search=${search}&page=${books.number - 1}&size=${books.size}&sort=${currentSort}&lang=${#locale.language}|}">
+                    <span th:text="#{books.previous}">Prev</span>
+                </a>
+                <span class="subtle" th:text="|${books.number + 1} / ${books.totalPages}|">1 / 1</span>
+                <a class="ghost-link"
+                   th:if="${books.number + 1 < books.totalPages}"
+                   th:href="@{|/books?search=${search}&page=${books.number + 1}&size=${books.size}&sort=${currentSort}&lang=${#locale.language}|}">
+                    <span th:text="#{books.next}">Next</span>
+                </a>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

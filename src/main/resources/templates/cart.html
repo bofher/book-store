@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="uk" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{cart.page.title}">Cart</title>
+    <th:block th:replace="~{components/ui :: styles}"></th:block>
+</head>
+<body>
+<div class="app-shell">
+    <th:block th:replace="~{components/ui :: topbar('/cart')}"></th:block>
+    <main class="page">
+        <section class="panel">
+            <h1 th:text="#{cart.title}">Cart</h1>
+
+            <div th:if="${checkoutSuccess}" class="subtle" th:text="#{cart.checkout_success}">Order placed successfully</div>
+            <div th:if="${checkoutError}" class="form-error" th:text="#{cart.checkout_error}">Not enough money</div>
+
+            <div th:if="${#lists.isEmpty(lines)}" class="form-error" th:text="#{cart.empty}">Cart is empty</div>
+
+            <div th:if="${!#lists.isEmpty(lines)}" style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                    <tr style="text-align: left; border-bottom: 1px solid var(--border);">
+                        <th style="padding: 12px;" th:text="#{books.column.title}">Title</th>
+                        <th style="padding: 12px;" th:text="#{books.column.author}">Author</th>
+                        <th style="padding: 12px;" th:text="#{cart.quantity}">Qty</th>
+                        <th style="padding: 12px;" th:text="#{books.column.price}">Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="line : ${lines}" style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 12px;" th:text="${line.key.name}">Book name</td>
+                        <td style="padding: 12px;" th:text="${line.key.author}">Author</td>
+                        <td style="padding: 12px;" th:text="${line.value}">1</td>
+                        <td style="padding: 12px;" th:text="${line.key.price}">0.00</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="actions" style="justify-content: space-between; margin-top: 20px;">
+                <a class="ghost-link" th:href="@{/books}" th:text="#{cart.back_to_books}">Back to books</a>
+                    <div class="actions">
+                        <div class="subtle" th:text="${#messages.msg('cart.total') + ' ' + total}">Total</div>
+                        <form th:if="${!#lists.isEmpty(lines)}" th:action="@{/orders/checkout}" method="post">
+                            <button class="primary-button" type="submit" th:text="#{cart.checkout}">Checkout</button>
+                        </form>
+                    </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

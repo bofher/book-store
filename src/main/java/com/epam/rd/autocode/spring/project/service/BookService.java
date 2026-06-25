@@ -12,6 +12,8 @@ public interface BookService {
 
     Page<BookDTO> getAllBooks(Pageable pageable);
 
+    Page<BookDTO> searchBooks(String search, Pageable pageable);
+
     BookDTO getBookByName(String name);
 
     BookDTO updateBookByName(String name, BookDTO book);

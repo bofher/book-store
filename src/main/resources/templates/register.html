@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="uk" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{register.page.title}">Register</title>
+    <th:block th:replace="~{components/ui :: styles}"></th:block>
+</head>
+<body>
+<div class="app-shell">
+    <th:block th:replace="~{components/ui :: topbar('/auth/register')}"></th:block>
+    <main class="page">
+        <section class="panel">
+            <h1 th:text="#{register.title}">Create account</h1>
+            <form class="form" th:action="@{/auth/register}" th:object="${registrationRequest}" method="post">
+                <div class="field">
+                    <label for="email" th:text="#{register.email}">Email</label>
+                    <input id="email" type="email" th:field="*{email}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                </div>
+                <div class="field">
+                    <label for="name" th:text="#{register.name}">Name</label>
+                    <input id="name" type="text" th:field="*{name}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                </div>
+                <div class="field">
+                    <label for="password" th:text="#{register.password}">Password</label>
+                    <input id="password" type="password" th:field="*{password}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                </div>
+                <div class="field">
+                    <label for="confirmPassword" th:text="#{register.confirm_password}">Confirm password</label>
+                    <input id="confirmPassword" type="password" th:field="*{confirmPassword}" required>
+                    <p class="field-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></p>
+                </div>
+                <div class="actions">
+                    <button class="primary-button" type="submit" th:text="#{register.submit}">Create account</button>
+                    <a class="ghost-link" th:href="@{/auth/login}" th:text="#{register.back_to_login}">Back to login</a>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+</body>
+</html>

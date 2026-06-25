@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="uk" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{error.page.title}">Error</title>
+    <th:block th:replace="~{components/ui :: styles}"></th:block>
+</head>
+<body>
+<div class="app-shell">
+    <th:block th:with="errorPath=${path != null ? path : '/error'}">
+        <th:block th:replace="~{components/ui :: topbar(${errorPath})}"></th:block>
+    </th:block>
+    <main class="page">
+        <section class="panel">
+            <h1 th:text="#{error.page.title}">Error</h1>
+            <p class="subtle" th:switch="${status}">
+                <span th:case="401" th:text="#{error.status.401}">Unauthorized</span>
+                <span th:case="403" th:text="#{error.status.403}">Access denied</span>
+                <span th:case="409" th:text="#{error.status.409}">Not enough money</span>
+                <span th:case="404" th:text="#{error.status.404}">Page not found</span>
+                <span th:case="*" th:text="#{error.status.default}">Unexpected error</span>
+            </p>
+            <ul class="kv-list">
+                <li class="kv-item" th:if="${status}">
+                    <span class="kv-label" th:text="#{error.details.status}">Status</span>
+                    <span class="kv-value" th:text="${status}">500</span>
+                </li>
+                <li class="kv-item" th:if="${path}">
+                    <span class="kv-label" th:text="#{error.details.path}">Path</span>
+                    <span class="kv-value" th:text="${path}">/</span>
+                </li>
+                <li class="kv-item" th:if="${error}">
+                    <span class="kv-label" th:text="#{error.details.error}">Error</span>
+                    <span class="kv-value" th:text="${error}">Error</span>
+                </li>
+                <li class="kv-item" th:if="${message}">
+                    <span class="kv-label" th:text="#{error.details.message}">Message</span>
+                    <span class="kv-value" th:text="${message}">Message</span>
+                </li>
+            </ul>
+            <div class="actions" style="margin-top: 18px;">
+                <a class="ghost-link" th:href="@{/books}" th:text="#{books.back}">Back to books</a>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

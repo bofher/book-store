@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uk" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${book.name}">Book</title>
+    <th:block th:replace="~{components/ui :: styles}"></th:block>
+</head>
+<body>
+<div class="app-shell">
+    <th:block th:with="currentPath=@{/books/{name}(name=${book.name})}">
+        <th:block th:replace="~{components/ui :: topbar(${currentPath})}"></th:block>
+    </th:block>
+    <main class="page">
+        <section class="panel">
+            <h1 th:text="${book.name}">Book name</h1>
+            <p class="subtle" th:text="${book.author}">Author</p>
+            <div th:if="${bookDeleteError}" class="form-error" th:text="#{books.delete.in_use}">
+                Cannot delete book because it is used in existing orders
+            </div>
+
+            <ul class="kv-list">
+                <li class="kv-item"><span class="kv-label" th:text="#{books.genre}">Genre</span><span class="kv-value" th:text="${book.genre}"></span></li>
+                <li class="kv-item"><span class="kv-label" th:text="#{books.age_group}">Age group</span><span class="kv-value" th:text="${#messages.msg('books.age_group.' + book.ageGroup)}"></span></li>
+                <li class="kv-item"><span class="kv-label" th:text="#{books.language}">Language</span><span class="kv-value" th:text="${#messages.msg('books.language.' + book.language)}"></span></li>
+                <li class="kv-item"><span class="kv-label" th:text="#{books.price}">Price</span><span class="kv-value" th:text="${book.price}"></span></li>
+                <li class="kv-item"><span class="kv-label" th:text="#{books.pages}">Pages</span><span class="kv-value" th:text="${book.pages}"></span></li>
+                <li class="kv-item"><span class="kv-label" th:text="#{books.publication_date}">Publication date</span><span class="kv-value" th:text="${book.publicationDate}"></span></li>
+                <li class="kv-item">
+                    <span class="kv-label" th:text="#{books.characteristics}">Characteristics</span>
+                    <span class="kv-value" th:if="${#strings.isEmpty(book.characteristics)}" th:text="#{books.no_characteristics}">No characteristics</span>
+                    <span class="kv-value" th:unless="${#strings.isEmpty(book.characteristics)}" th:text="${book.characteristics}">Characteristics</span>
+                </li>
+                <li class="kv-item">
+                    <span class="kv-label" th:text="#{books.description}">Description</span>
+                    <span class="kv-value" th:if="${#strings.isEmpty(book.description)}" th:text="#{books.no_description}">No description</span>
+                    <span class="kv-value" th:unless="${#strings.isEmpty(book.description)}" th:text="${book.description}">Description</span>
+                </li>
+            </ul>
+
+            <div class="actions" style="margin-top: 20px;">
+                <a class="ghost-link" th:href="@{/books}" th:text="#{books.back}">Back</a>
+            </div>
+
+            <div class="actions" sec:authorize="hasRole('CLIENT')" style="margin-top: 12px;">
+                <form th:action="@{|/cart/items/${book.name}|}" method="post">
+                    <label class="field" style="min-width: 160px; margin-bottom: 12px;">
+                        <span class="kv-label" th:text="#{books.quantity}">Quantity</span>
+                        <input type="number" name="quantity" min="1" value="1">
+                    </label>
+                    <button class="primary-button" type="submit" th:text="#{books.add_to_cart}">Add to cart</button>
+                </form>
+            </div>
+
+            <div class="actions" sec:authorize="hasRole('EMPLOYEE')" style="margin-top: 12px;">
+                <a class="primary-button" th:href="@{|/books/${book.name}/edit?lang=${#locale.language}|}" th:text="#{books.edit}">Edit</a>
+                <form th:action="@{|/books/${book.name}/delete|}" method="post"
+                      th:attr="data-confirm=#{books.confirm_delete}, onsubmit=|return confirm(this.dataset.confirm);|">
+                    <button class="primary-button" type="submit" style="background: #b91c1c;" th:text="#{books.delete}">Delete</button>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

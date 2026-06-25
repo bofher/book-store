@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="uk" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{profile.page.title}">Profile</title>
+    <th:block th:replace="~{components/ui :: styles}"></th:block>
+</head>
+<body>
+<div class="app-shell">
+    <th:block th:replace="~{components/ui :: topbar('/profile')}"></th:block>
+    <main class="page">
+        <section class="panel">
+            <h1 th:text="#{profile.title}">Profile</h1>
+
+            <div sec:authorize="hasRole('CLIENT')">
+                <p class="subtle" th:text="#{profile.client.subtitle}">Your account information</p>
+                <ul class="kv-list">
+                    <li class="kv-item">
+                        <span class="kv-label" th:text="#{profile.email}">Email</span>
+                        <span class="kv-value" th:text="${client.email}">email@example.com</span>
+                    </li>
+                    <li class="kv-item">
+                        <span class="kv-label" th:text="#{profile.balance}">Balance</span>
+                        <span class="kv-value" th:text="${client.balance}">0.00</span>
+                    </li>
+                </ul>
+
+                <form class="form form--wide" th:action="@{/profile/client}" th:object="${clientProfile}" method="post" style="margin-top: 20px;">
+                    <div class="field">
+                        <label for="clientName" th:text="#{profile.name}">Name</label>
+                        <input id="clientName" type="text" th:field="*{name}" required>
+                        <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                    </div>
+                    <div class="field">
+                        <label for="topUpAmount" th:text="#{profile.top_up_amount}">Top up amount</label>
+                        <input id="topUpAmount" type="number" step="0.01" min="0.01" th:field="*{topUpAmount}" required>
+                        <p class="field-error" th:if="${#fields.hasErrors('topUpAmount')}" th:errors="*{topUpAmount}"></p>
+                    </div>
+                    <div class="actions">
+                        <button class="primary-button" type="submit" th:text="#{profile.save}">Save</button>
+                    </div>
+                </form>
+            </div>
+
+            <div sec:authorize="hasRole('EMPLOYEE')">
+                <p class="subtle" th:text="#{profile.employee.subtitle}">Your employee information</p>
+                <ul class="kv-list">
+                    <li class="kv-item">
+                        <span class="kv-label" th:text="#{profile.email}">Email</span>
+                        <span class="kv-value" th:text="${employee.email}">email@example.com</span>
+                    </li>
+                </ul>
+
+                <form class="form form--wide" th:action="@{/profile/employee}" th:object="${employeeProfile}" method="post" style="margin-top: 20px;">
+                    <div class="field">
+                        <label for="employeeName" th:text="#{profile.name}">Name</label>
+                        <input id="employeeName" type="text" th:field="*{name}" required>
+                        <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                    </div>
+                    <div class="field">
+                        <label for="phone" th:text="#{profile.phone}">Phone</label>
+                        <input id="phone" type="text" th:field="*{phone}" required>
+                        <p class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
+                    </div>
+                    <div class="field">
+                        <label for="birthDate" th:text="#{profile.birth_date}">Birth date</label>
+                        <input id="birthDate" type="date" th:field="*{birthDate}" required>
+                        <p class="field-error" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></p>
+                    </div>
+                    <div class="actions">
+                        <button class="primary-button" type="submit" th:text="#{profile.save}">Save</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="actions" style="margin-top: 24px;">
+                <form sec:authorize="hasRole('CLIENT')" th:action="@{/profile/delete}" method="post"
+                      th:attr="data-confirm=#{profile.confirm_delete}, onsubmit=|return confirm(this.dataset.confirm);|">
+                    <button class="primary-button" type="submit" style="background: #b91c1c;" th:text="#{profile.delete}">Delete account</button>
+                </form>
+            </div>
+
+        </section>
+    </main>
+</div>
+</body>
+</html>
