@@ -28,7 +28,7 @@ public class ClientDTO{
     private String name;
 
     @NotNull(message = "{validation.required}")
-    @DecimalMin(value = "0.00", inclusive = true, message = "{validation.non_negative}")
+    @DecimalMin(value = "0.00", message = "{validation.non_negative}")
     private BigDecimal balance;
 
     private boolean blocked;

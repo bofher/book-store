@@ -59,12 +59,13 @@
                     </div>
                     <div class="field">
                         <label for="phone" th:text="#{profile.phone}">Phone</label>
-                        <input id="phone" type="text" th:field="*{phone}" required>
+                        <input id="phone" type="tel" th:field="*{phone}" required minlength="7" maxlength="20" inputmode="tel">
                         <p class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></p>
                     </div>
                     <div class="field">
                         <label for="birthDate" th:text="#{profile.birth_date}">Birth date</label>
-                        <input id="birthDate" type="date" th:field="*{birthDate}" required>
+                        <input id="birthDate" type="date" th:field="*{birthDate}" required
+                               th:attr="max=${T(java.time.LocalDate).now().minusDays(1)}">
                         <p class="field-error" th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"></p>
                     </div>
                     <div class="actions">

@@ -48,12 +48,13 @@
                 </div>
                 <div class="field">
                     <label for="price" th:text="#{books.price}">Price</label>
-                    <input id="price" type="number" step="0.01" min="0" th:field="*{price}" required>
+                    <input id="price" type="number" step="0.01" min="0.01" th:field="*{price}" required>
                     <p class="field-error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
                 </div>
                 <div class="field">
                     <label for="publicationDate" th:text="#{books.publication_date}">Publication date</label>
-                    <input id="publicationDate" type="date" th:field="*{publicationDate}" required>
+                    <input id="publicationDate" type="date" th:field="*{publicationDate}" required
+                           th:attr="max=${T(java.time.LocalDate).now()}">
                     <p class="field-error" th:if="${#fields.hasErrors('publicationDate')}" th:errors="*{publicationDate}"></p>
                 </div>
                 <div class="field">
@@ -63,7 +64,7 @@
                 </div>
                 <div class="field">
                     <label for="pages" th:text="#{books.pages}">Pages</label>
-                    <input id="pages" type="number" min="1" th:field="*{pages}" required>
+                    <input id="pages" type="number" min="1" step="1" th:field="*{pages}" required>
                     <p class="field-error" th:if="${#fields.hasErrors('pages')}" th:errors="*{pages}"></p>
                 </div>
                 <div class="field">
@@ -117,12 +118,13 @@
                 </div>
                 <div class="field">
                     <label for="price" th:text="#{books.price}">Price</label>
-                    <input id="price" type="number" step="0.01" min="0" th:field="*{price}" required>
+                    <input id="price" type="number" step="0.01" min="0.01" th:field="*{price}" required>
                     <p class="field-error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
                 </div>
                 <div class="field">
                     <label for="publicationDate" th:text="#{books.publication_date}">Publication date</label>
-                    <input id="publicationDate" type="date" th:field="*{publicationDate}" required>
+                    <input id="publicationDate" type="date" th:field="*{publicationDate}" required
+                           th:attr="max=${T(java.time.LocalDate).now()}">
                     <p class="field-error" th:if="${#fields.hasErrors('publicationDate')}" th:errors="*{publicationDate}"></p>
                 </div>
                 <div class="field">
@@ -132,7 +134,7 @@
                 </div>
                 <div class="field">
                     <label for="pages" th:text="#{books.pages}">Pages</label>
-                    <input id="pages" type="number" min="1" th:field="*{pages}" required>
+                    <input id="pages" type="number" min="1" step="1" th:field="*{pages}" required>
                     <p class="field-error" th:if="${#fields.hasErrors('pages')}" th:errors="*{pages}"></p>
                 </div>
                 <div class="field">

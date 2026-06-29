@@ -1,15 +1,16 @@
+-- Password for seeded employees: employe123
 INSERT INTO EMPLOYEES (BLOCKED, BIRTH_DATE, EMAIL, NAME, PASSWORD, PHONE)
 VALUES (FALSE, '1991-02-14', 'employee.demo@bookstore.com', 'Demo Employee', '$2a$10$iX5R6Dz6oIvhP/3bvBsMdOLe5tJC2j1OR/u.f7fAE8GtH14awk8zK', '555-000-0000'),
-       (FALSE, '1990-05-15', 'john.doe@email.com', 'John Doe', 'pass123', '555-123-4567'),
-       (FALSE, '1985-09-20', 'jane.smith@email.com', 'Jane Smith', 'abc456', '555-987-6543'),
-       (FALSE, '1978-03-08', 'bob.jones@email.com', 'Bob Jones', 'qwerty789', '555-321-6789'),
-       (FALSE, '1982-11-25', 'alice.white@email.com', 'Alice White', 'secret567', '555-876-5432'),
-       (FALSE, '1995-07-12', 'mike.wilson@email.com', 'Mike Wilson', 'mypassword', '555-234-5678'),
-       (FALSE, '1989-01-30', 'sara.brown@email.com', 'Sara Brown', 'letmein123', '555-876-5433'),
-       (FALSE, '1975-06-18', 'tom.jenkins@email.com', 'Tom Jenkins', 'pass4321', '555-345-6789'),
-       (FALSE, '1987-12-04', 'lisa.taylor@email.com', 'Lisa Taylor', 'securepwd', '555-789-0123'),
-       (FALSE, '1992-08-22', 'david.wright@email.com', 'David Wright', 'access123', '555-456-7890'),
-       (FALSE, '1980-04-10', 'emily.harris@email.com', 'Emily Harris', '1234abcd', '555-098-7654');
+       (FALSE, '1990-05-15', 'john.doe@email.com', 'John Doe', '$2a$10$iX5R6Dz6oIvhP/3bvBsMdOLe5tJC2j1OR/u.f7fAE8GtH14awk8zK', '555-123-4567'),
+       (FALSE, '1985-09-20', 'jane.smith@email.com', 'Jane Smith', '$2a$10$iX5R6Dz6oIvhP/3bvBsMdOLe5tJC2j1OR/u.f7fAE8GtH14awk8zK', '555-987-6543'),
+       (FALSE, '1978-03-08', 'bob.jones@email.com', 'Bob Jones', '$2a$10$iX5R6Dz6oIvhP/3bvBsMdOLe5tJC2j1OR/u.f7fAE8GtH14awk8zK', '555-321-6789'),
+       (FALSE, '1982-11-25', 'alice.white@email.com', 'Alice White', '$2a$10$iX5R6Dz6oIvhP/3bvBsMdOLe5tJC2j1OR/u.f7fAE8GtH14awk8zK', '555-876-5432'),
+       (FALSE, '1995-07-12', 'mike.wilson@email.com', 'Mike Wilson', '$2a$10$iX5R6Dz6oIvhP/3bvBsMdOLe5tJC2j1OR/u.f7fAE8GtH14awk8zK', '555-234-5678'),
+       (FALSE, '1989-01-30', 'sara.brown@email.com', 'Sara Brown', '$2a$10$iX5R6Dz6oIvhP/3bvBsMdOLe5tJC2j1OR/u.f7fAE8GtH14awk8zK', '555-876-5433'),
+       (FALSE, '1975-06-18', 'tom.jenkins@email.com', 'Tom Jenkins', '$2a$10$iX5R6Dz6oIvhP/3bvBsMdOLe5tJC2j1OR/u.f7fAE8GtH14awk8zK', '555-345-6789'),
+       (FALSE, '1987-12-04', 'lisa.taylor@email.com', 'Lisa Taylor', '$2a$10$iX5R6Dz6oIvhP/3bvBsMdOLe5tJC2j1OR/u.f7fAE8GtH14awk8zK', '555-789-0123'),
+       (FALSE, '1992-08-22', 'david.wright@email.com', 'David Wright', '$2a$10$iX5R6Dz6oIvhP/3bvBsMdOLe5tJC2j1OR/u.f7fAE8GtH14awk8zK', '555-456-7890'),
+       (FALSE, '1980-04-10', 'emily.harris@email.com', 'Emily Harris', '$2a$10$iX5R6Dz6oIvhP/3bvBsMdOLe5tJC2j1OR/u.f7fAE8GtH14awk8zK', '555-098-7654');
 
 INSERT INTO CLIENTS (BLOCKED, BALANCE, EMAIL, NAME, PASSWORD)
 VALUES (FALSE, 1000.00, 'client1@example.com', 'Medelyn Wright', 'password123'),

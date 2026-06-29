@@ -24,12 +24,12 @@
                 </div>
                 <div class="field">
                     <label for="password" th:text="#{register.password}">Password</label>
-                    <input id="password" type="password" th:field="*{password}" required>
+                    <input id="password" type="password" th:field="*{password}" required minlength="8">
                     <p class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
                 </div>
                 <div class="field">
                     <label for="confirmPassword" th:text="#{register.confirm_password}">Confirm password</label>
-                    <input id="confirmPassword" type="password" th:field="*{confirmPassword}" required>
+                    <input id="confirmPassword" type="password" th:field="*{confirmPassword}" required minlength="8">
                     <p class="field-error" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></p>
                 </div>
                 <div class="actions">
@@ -40,5 +40,59 @@
         </section>
     </main>
 </div>
+<script th:inline="javascript">
+    (function () {
+        var password = document.getElementById("password");
+        var confirmPassword = document.getElementById("confirmPassword");
+        if (!password || !confirmPassword) {
+            return;
+        }
+
+        function hasDigit(value) {
+            for (var i = 0; i < value.length; i++) {
+                var char = value.charCodeAt(i);
+                if (char >= 48 && char <= 57) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function validatePassword() {
+            var value = password.value;
+            if (!value) {
+                password.setCustomValidity("");
+                return;
+            }
+            if (value.length < 8) {
+                password.setCustomValidity([[#{password.min}]]);
+                return;
+            }
+            if (value === value.toLowerCase() || value === value.toUpperCase() || !hasDigit(value)) {
+                password.setCustomValidity([[#{password.rules}]]);
+                return;
+            }
+            password.setCustomValidity("");
+        }
+
+        function validateConfirmPassword() {
+            if (!confirmPassword.value) {
+                confirmPassword.setCustomValidity("");
+                return;
+            }
+            if (confirmPassword.value !== password.value) {
+                confirmPassword.setCustomValidity([[#{password.mismatch}]]);
+                return;
+            }
+            confirmPassword.setCustomValidity("");
+        }
+
+        password.addEventListener("input", function () {
+            validatePassword();
+            validateConfirmPassword();
+        });
+        confirmPassword.addEventListener("input", validateConfirmPassword);
+    })();
+</script>
 </body>
 </html>
